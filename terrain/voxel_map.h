@@ -7,6 +7,8 @@
 #include <core/hash_map.h>
 #include <scene/main/node.h>
 
+namespace Voxel {
+
 // Infinite voxel storage by means of octants like Gridmap, within a constant LOD
 class VoxelMap : public Reference {
 	GDCLASS(VoxelMap, Reference)
@@ -142,5 +144,7 @@ private:
 
 	unsigned int _lod_index = 0;
 };
+
+}
 
 #endif // VOXEL_MAP_H

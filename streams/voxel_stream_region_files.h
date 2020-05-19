@@ -7,6 +7,8 @@
 
 class FileAccess;
 
+namespace Voxel {
+
 // Loads and saves blocks to the filesystem, under a directory.
 // Blocks are saved in region files to minimize I/O.
 // It's a bit more complex but should deliver better performance.
@@ -165,5 +167,7 @@ private:
 	std::vector<CachedRegion *> _region_cache;
 	unsigned int _max_open_regions = MIN(8, FOPEN_MAX);
 };
+
+}
 
 #endif // VOXEL_STREAM_REGION_H

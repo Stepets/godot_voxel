@@ -4,6 +4,8 @@
 
 #include "core/os/os.h"
 
+namespace Voxel {
+
 VoxelMap::VoxelMap() :
 		_last_accessed_block(NULL) {
 
@@ -270,4 +272,6 @@ void VoxelMap::_bind_methods() {
 void VoxelMap::_b_get_buffer_copy(Vector3 pos, Ref<VoxelBuffer> dst_buffer_ref, unsigned int channel) {
 	ERR_FAIL_COND(dst_buffer_ref.is_null());
 	get_buffer_copy(Vector3i(pos), **dst_buffer_ref, channel);
+}
+
 }

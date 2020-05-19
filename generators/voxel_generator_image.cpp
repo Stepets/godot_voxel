@@ -2,6 +2,8 @@
 #include "../util/array_slice.h"
 #include "../util/fixed_array.h"
 
+namespace Voxel {
+
 namespace {
 
 inline float get_height_repeat(Image &im, int x, int y) {
@@ -45,8 +47,6 @@ void VoxelGeneratorImage::generate_block(VoxelBlockRequest &input) {
 	VoxelBuffer &out_buffer = **input.voxel_buffer;
 	Image &image = **_image;
 
-	image.lock();
-
 	if (_blur_enabled) {
 		VoxelGeneratorHeightmap::generate(out_buffer,
 				[&image](int x, int z) { return get_height_blurred(image, x, z); },
@@ -56,8 +56,6 @@ void VoxelGeneratorImage::generate_block(VoxelBlockRequest &input) {
 				[&image](int x, int z) { return get_height_repeat(image, x, z); },
 				input.origin_in_voxels, input.lod);
 	}
-
-	image.unlock();
 
 	out_buffer.compress_uniform_channels();
 }
@@ -72,4 +70,6 @@ void VoxelGeneratorImage::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "image", PROPERTY_HINT_RESOURCE_TYPE, "Image"), "set_image", "get_image");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "blur_enabled"), "set_blur_enabled", "is_blur_enabled");
+}
+
 }

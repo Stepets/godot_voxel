@@ -3,6 +3,8 @@
 
 #include "../math/vector3i.h"
 
+namespace Voxel {
+
 // Simple 3D array of floats, until VoxelBuffer supports higher-precision
 class FloatBuffer3D {
 public:
@@ -28,5 +30,7 @@ private:
 	float *_data = nullptr;
 	Vector3i _size;
 };
+
+}
 
 #endif // FLOAT_BUFFER_3D_H

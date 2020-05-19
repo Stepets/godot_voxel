@@ -4,9 +4,11 @@
 #include "voxel_generator_heightmap.h"
 #include <modules/opensimplex/open_simplex_noise.h>
 
+namespace Voxel {
+
 class VoxelGeneratorNoise2D : public VoxelGeneratorHeightmap {
 	GDCLASS(VoxelGeneratorNoise2D, VoxelGeneratorHeightmap)
-	
+
 public:
 	VoxelGeneratorNoise2D();
 
@@ -25,5 +27,7 @@ private:
 	Ref<OpenSimplexNoise> _noise;
 	Ref<Curve> _curve;
 };
+
+}
 
 #endif // VOXEL_GENERATOR_NOISE_2D_H

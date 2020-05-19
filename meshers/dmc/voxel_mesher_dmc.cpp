@@ -9,6 +9,8 @@
 // Algorithm taken from https://www.volume-gfx.com/volume-rendering/dual-marching-cubes/
 // Partially based on Ogre's implementation, adapted for requirements of this module with a few extras
 
+namespace Voxel {
+
 namespace dmc {
 
 // Surface is defined when isolevel crosses 0
@@ -130,7 +132,7 @@ bool can_split(Vector3i node_origin, int node_size, const VoxelAccess &voxels, f
 
 		HermiteValue value = get_hermite_value(voxels.buffer, pos.x, pos.y, pos.z);
 
-		float interpolated_value = ::interpolate(v0, v1, v2, v3, v4, v5, v6, v7, positions_ratio[i]);
+		float interpolated_value = Voxel::interpolate(v0, v1, v2, v3, v4, v5, v6, v7, positions_ratio[i]);
 
 		float gradient_magnitude = value.gradient.length();
 		if (gradient_magnitude < FLT_EPSILON) {
@@ -288,8 +290,8 @@ void foreach_node(OctreeNode *root, Action_T &a, int depth = 0) {
 	}
 }
 
-inline void scale_positions(PoolVector3Array &positions, float scale) {
-	PoolVector3Array::Write w = positions.write();
+inline void scale_positions(PackedVector3Array &positions, float scale) {
+	Vector3 *w = positions.ptrw();
 	const uint32_t size = positions.size();
 	for (unsigned int i = 0; i < size; ++i) {
 		w[i] *= scale;
@@ -308,9 +310,9 @@ Array generate_debug_octree_mesh(OctreeNode *root, int scale) {
 	};
 
 	struct Arrays {
-		PoolVector3Array positions;
-		PoolColorArray colors;
-		PoolIntArray indices;
+		PackedVector3Array positions;
+		PackedColorArray colors;
+		PackedInt32Array indices;
 	};
 
 	struct AddCube {
@@ -367,8 +369,8 @@ Array generate_debug_octree_mesh(OctreeNode *root, int scale) {
 
 Array generate_debug_dual_grid_mesh(const DualGrid &grid, int scale) {
 
-	PoolVector3Array positions;
-	PoolIntArray indices;
+	PackedVector3Array positions;
+	PackedInt32Array indices;
 
 	for (unsigned int i = 0; i < grid.cells.size(); ++i) {
 
@@ -1656,4 +1658,6 @@ void VoxelMesherDMC::_bind_methods() {
 
 	BIND_ENUM_CONSTANT(SEAM_NONE);
 	BIND_ENUM_CONSTANT(SEAM_MARCHING_SQUARE_SKIRTS);
+}
+
 }

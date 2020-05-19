@@ -1,6 +1,8 @@
 #include "voxel_generator.h"
 #include "../voxel_string_names.h"
 
+namespace Voxel {
+
 VoxelGenerator::VoxelGenerator() {
 }
 
@@ -15,13 +17,13 @@ void VoxelGenerator::generate_block(VoxelBlockRequest &input) {
 		Variant arg3 = input.lod;
 
 		const Variant *args[3] = { &arg1, &arg2, &arg3 };
-		Variant::CallError err;
+		Callable::CallError err;
 		script->call(VoxelStringNames::get_singleton()->generate_block, args, 3, err);
 
-		ERR_FAIL_COND_MSG(err.error != Variant::CallError::CALL_OK,
+		ERR_FAIL_COND_MSG(err.error != Callable::CallError::CALL_OK,
 				"voxel_generator.cpp:generate_block gave an error: " + String::num(err.error) +
 						", Argument: " + String::num(err.argument) +
-						", Expected type: " + Variant::get_type_name(err.expected));
+						", Expected type: " + Variant::get_type_name(Variant::Type(err.expected)));
 
 		// This had to be explicitely logged due to the usual GD debugger not working with threads
 	}
@@ -50,4 +52,6 @@ void VoxelGenerator::_bind_methods() {
 	// Note: C++ inheriting classes don't need to re-bind these, because they are bindings that call the actual virtual methods
 
 	ClassDB::bind_method(D_METHOD("generate_block", "out_buffer", "origin_in_voxels", "lod"), &VoxelGenerator::_b_generate_block);
+}
+
 }

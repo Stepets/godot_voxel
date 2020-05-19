@@ -3,6 +3,8 @@
 
 #include "core/string_name.h"
 
+namespace Voxel {
+
 class VoxelStringNames {
 private:
 	static VoxelStringNames *g_singleton;
@@ -24,5 +26,7 @@ public:
 
 	StringName u_transition_mask;
 };
+
+}
 
 #endif // VOXEL_STRING_NAMES_H

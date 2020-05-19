@@ -4,6 +4,8 @@
 #include "../math/rect3i.h"
 #include <core/reference.h>
 
+namespace Voxel {
+
 class VoxelBuffer;
 
 // This class exists only to make the script API nicer.
@@ -96,6 +98,8 @@ protected:
 	int _eraser_value = 0; // air
 };
 
-VARIANT_ENUM_CAST(VoxelTool::Mode)
+}
+
+VARIANT_ENUM_CAST(Voxel::VoxelTool::Mode)
 
 #endif // VOXEL_TOOL_H

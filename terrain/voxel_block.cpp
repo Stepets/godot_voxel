@@ -1,21 +1,23 @@
 #include "voxel_block.h"
 #include "../util/zprofiling.h"
 #include "../voxel_string_names.h"
-#include <scene/3d/spatial.h>
-#include <scene/resources/concave_polygon_shape.h>
+#include <scene/3d/node_3d.h>
+#include <scene/resources/concave_polygon_shape_3d.h>
+
+namespace Voxel {
 
 // Faster version of Mesh::create_trimesh_shape()
 // See https://github.com/Zylann/godot_voxel/issues/54
 //
-static Ref<ConcavePolygonShape> create_concave_polygon_shape(Vector<Array> surfaces) {
+static Ref<ConcavePolygonShape3D> create_concave_polygon_shape(Vector<Array> surfaces) {
 
-	PoolVector<Vector3> face_points;
+	Vector<Vector3> face_points;
 	int face_points_size = 0;
 
 	//find the correct size for face_points
 	for(int i = 0; i < surfaces.size(); i++) {
 		const Array &surface_arrays = surfaces[i];
-		PoolVector<int> indices = surface_arrays[Mesh::ARRAY_INDEX];
+		Vector<int> indices = surface_arrays[Mesh::ARRAY_INDEX];
 
 		face_points_size += indices.size();
 	}
@@ -26,19 +28,19 @@ static Ref<ConcavePolygonShape> create_concave_polygon_shape(Vector<Array> surfa
 	for(int i = 0; i < surfaces.size(); i++) {
 		const Array &surface_arrays = surfaces[i];
 
-		PoolVector<Vector3> positions = surface_arrays[Mesh::ARRAY_VERTEX];
-		PoolVector<int> indices = surface_arrays[Mesh::ARRAY_INDEX];
+		Vector<Vector3> positions = surface_arrays[Mesh::ARRAY_VERTEX];
+		Vector<int> indices = surface_arrays[Mesh::ARRAY_INDEX];
 
-		ERR_FAIL_COND_V(positions.size() < 3, Ref<ConcavePolygonShape>());
-		ERR_FAIL_COND_V(indices.size() < 3, Ref<ConcavePolygonShape>());
-		ERR_FAIL_COND_V(indices.size() % 3 != 0, Ref<ConcavePolygonShape>());
+		ERR_FAIL_COND_V(positions.size() < 3, Ref<ConcavePolygonShape3D>());
+		ERR_FAIL_COND_V(indices.size() < 3, Ref<ConcavePolygonShape3D>());
+		ERR_FAIL_COND_V(indices.size() % 3 != 0, Ref<ConcavePolygonShape3D>());
 
 		int face_points_count = face_points_offset + indices.size();
 
 		{
-			PoolVector<Vector3>::Write w = face_points.write();
-			PoolVector<int>::Read index_r = indices.read();
-			PoolVector<Vector3>::Read position_r = positions.read();
+			Vector3 *w = face_points.ptrw();
+			const int *index_r = indices.ptr();
+			const Vector3 *position_r = positions.ptr();
 
 			for (int p = face_points_offset; p < face_points_count; ++p) {
 				w[p] = position_r[index_r[p - face_points_offset]];
@@ -48,7 +50,7 @@ static Ref<ConcavePolygonShape> create_concave_polygon_shape(Vector<Array> surfa
 		face_points_offset += indices.size();
 	}
 
-	Ref<ConcavePolygonShape> shape = memnew(ConcavePolygonShape);
+	Ref<ConcavePolygonShape3D> shape = memnew(ConcavePolygonShape3D);
 	shape->set_faces(face_points);
 	return shape;
 }
@@ -66,18 +68,18 @@ VoxelBlock *VoxelBlock::create(Vector3i bpos, Ref<VoxelBuffer> buffer, unsigned 
 	block->voxels = buffer;
 
 #ifdef VOXEL_DEBUG_LOD_MATERIALS
-	Ref<SpatialMaterial> debug_material;
+	Ref<ShaderMaterial> debug_material;
 	debug_material.instance();
 	int checker = (bpos.x + bpos.y + bpos.z) & 1;
-	Color debug_color = Color(0.8, 0.4, 0.8).linear_interpolate(Color(0.0, 0.0, 0.5), static_cast<float>(p_lod_index) / 8.f);
+	Color debug_color = Color(0.8, 0.4, 0.8).lerp(Color(0.0, 0.0, 0.5), static_cast<float>(p_lod_index) / 8.f);
 	debug_color = debug_color.lightened(checker * 0.1f);
-	debug_material->set_albedo(debug_color);
-	block->_debug_material = debug_material;
+	debug_material->set_shader_param("albedo", debug_color);
+	block->_shader_material = debug_material;
 
-	Ref<SpatialMaterial> debug_transition_material;
-	debug_transition_material.instance();
-	debug_transition_material->set_albedo(Color(1, 1, 0));
-	block->_debug_transition_material = debug_transition_material;
+// 	Ref<ShaderMaterial> debug_transition_material;
+// 	debug_transition_material.instance();
+// 	debug_transition_material->set_shader_param("albedo", Color(1, 1, 0));
+// 	block->_debug_transition_material = debug_transition_material;
 #endif
 
 	return block;
@@ -89,7 +91,7 @@ VoxelBlock::VoxelBlock() {
 VoxelBlock::~VoxelBlock() {
 }
 
-void VoxelBlock::set_world(Ref<World> p_world) {
+void VoxelBlock::set_world(Ref<World3D> p_world) {
 	if (_world != p_world) {
 		_world = p_world;
 
@@ -102,7 +104,7 @@ void VoxelBlock::set_world(Ref<World> p_world) {
 	}
 }
 
-void VoxelBlock::set_mesh(Ref<Mesh> mesh, Spatial *node, bool generate_collision, Vector<Array> surface_arrays, bool debug_collision) {
+void VoxelBlock::set_mesh(Ref<Mesh> mesh, Node3D *node, bool generate_collision, Vector<Array> surface_arrays, bool debug_collision) {
 	// TODO Don't add mesh instance to the world if it's not visible.
 	// I suspect Godot is trying to include invisible mesh instances into the culling process,
 	// which is killing performance when LOD is used (i.e many meshes are in pool but hidden)
@@ -111,7 +113,7 @@ void VoxelBlock::set_mesh(Ref<Mesh> mesh, Spatial *node, bool generate_collision
 	if (mesh.is_valid()) {
 
 		ERR_FAIL_COND(node == nullptr);
-		ERR_FAIL_COND(node->get_world() != _world);
+		ERR_FAIL_COND(node->get_world_3d() != _world);
 
 		Transform transform(Basis(), _position_in_voxels.to_vec3());
 
@@ -133,7 +135,7 @@ void VoxelBlock::set_mesh(Ref<Mesh> mesh, Spatial *node, bool generate_collision
 #endif
 
 		if (generate_collision) {
-			Ref<Shape> shape = create_concave_polygon_shape(surface_arrays);
+			Ref<Shape3D> shape = create_concave_polygon_shape(surface_arrays);
 
 			if (!_static_body.is_valid()) {
 				_static_body.create();
@@ -307,4 +309,6 @@ void VoxelBlock::set_modified(bool modified) {
 	//		print_line(String("Marking block {0}[lod{1}] as modified").format(varray(bpos.to_vec3(), lod_index)));
 	//	}
 	_modified = modified;
+}
+
 }

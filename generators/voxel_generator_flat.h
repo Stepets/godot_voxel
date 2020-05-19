@@ -3,6 +3,8 @@
 
 #include "voxel_generator.h"
 
+namespace Voxel {
+
 class VoxelGeneratorFlat : public VoxelGenerator {
 	GDCLASS(VoxelGeneratorFlat, VoxelGenerator)
 
@@ -30,5 +32,7 @@ private:
 	float _height = 0;
 	float _iso_scale = 0.1;
 };
+
+}
 
 #endif // VOXEL_GENERATOR_FLAT_H

@@ -1,11 +1,12 @@
 #ifndef HEADER_VOXEL_UTILITY_H
 #define HEADER_VOXEL_UTILITY_H
 
-#include <core/pool_vector.h>
 #include <core/ustring.h>
 #include <core/vector.h>
 #include <scene/resources/mesh.h>
 #include <vector>
+
+namespace Voxel {
 
 // Takes elements starting from a given position and moves them at the beginning,
 // then shrink the array to fit them. Other elements are discarded.
@@ -74,11 +75,11 @@ inline void unordered_remove_if(std::vector<T> &vec, F predicate) {
 //}
 
 template <typename T>
-void copy_to(PoolVector<T> &to, const Vector<T> &from) {
+void copy_to(Vector<T> &to, const Vector<T> &from) {
 
 	to.resize(from.size());
 
-	typename PoolVector<T>::Write w = to.write();
+	typename Vector<T>::Write w = to.write();
 
 	for (unsigned int i = 0; i < from.size(); ++i) {
 		w[i] = from[i];
@@ -90,10 +91,10 @@ inline String ptr2s(const void *p) {
 }
 
 template <typename T>
-void raw_copy_to(PoolVector<T> &to, const std::vector<T> &from) {
+void raw_copy_to(Vector<T> &to, const std::vector<T> &from) {
 	to.resize(from.size());
-	typename PoolVector<T>::Write w = to.write();
-	memcpy(w.ptr(), from.data(), from.size() * sizeof(T));
+	T *w = to.ptrw();
+	memcpy(w, from.data(), from.size() * sizeof(T));
 }
 
 // TODO Move math funcs under math/ folder and wrap them in a namespace
@@ -137,8 +138,8 @@ inline T clamp(const T x, const T min_value, const T max_value) {
 }
 
 inline bool is_surface_triangulated(Array surface) {
-	PoolVector3Array positions = surface[Mesh::ARRAY_VERTEX];
-	PoolIntArray indices = surface[Mesh::ARRAY_INDEX];
+	PackedVector3Array positions = surface[Mesh::ARRAY_VERTEX];
+	Vector<int> indices = surface[Mesh::ARRAY_INDEX];
 	return positions.size() >= 3 && indices.size() >= 3;
 }
 
@@ -179,5 +180,7 @@ void free_debug_box_mesh();
 Ref<Mesh> get_debug_box_mesh();
 } // namespace VoxelDebug
 #endif
+
+}
 
 #endif // HEADER_VOXEL_UTILITY_H

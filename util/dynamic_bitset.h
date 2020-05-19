@@ -4,6 +4,8 @@
 #include <core/error_macros.h>
 #include <vector>
 
+namespace Voxel {
+
 // STL's bitset is fixed size, and I don't want to depend on Boost
 class DynamicBitset {
 public:
@@ -58,5 +60,7 @@ private:
 	std::vector<uint64_t> _bits;
 	unsigned int _size = 0;
 };
+
+}
 
 #endif // DYNAMIC_BITSET_H

@@ -9,6 +9,8 @@
 #include <core/core_string_names.h>
 #include <core/engine.h>
 
+namespace Voxel {
+
 const uint32_t MAIN_THREAD_MESHING_BUDGET_MS = 8;
 
 namespace {
@@ -32,7 +34,7 @@ Ref<ArrayMesh> build_mesh(const Vector<Array> surfaces, Mesh::PrimitiveType prim
 			continue;
 		}
 
-		mesh->add_surface_from_arrays(primitive, surface, Array(), compression_flags);
+		mesh->add_surface_from_arrays(primitive, surface, Array(), Dictionary(), compression_flags);
 		mesh->surface_set_material(surface_index, material);
 		// No multi-material supported yet
 		++surface_index;
@@ -115,15 +117,15 @@ void VoxelLodTerrain::set_stream(Ref<VoxelStream> p_stream) {
 	}
 
 	if (_stream.is_valid()) {
-		if (_stream->is_connected(CoreStringNames::get_singleton()->changed, this, "_on_stream_params_changed")) {
-			_stream->disconnect(CoreStringNames::get_singleton()->changed, this, "_on_stream_params_changed");
+		if (_stream->is_connected(CoreStringNames::get_singleton()->changed, callable_mp(this, &VoxelLodTerrain::_on_stream_params_changed))) {
+			_stream->disconnect(CoreStringNames::get_singleton()->changed, callable_mp(this, &VoxelLodTerrain::_on_stream_params_changed));
 		}
 	}
 
 	_stream = p_stream;
 
 	if (_stream.is_valid()) {
-		_stream->connect(CoreStringNames::get_singleton()->changed, this, "_on_stream_params_changed");
+		_stream->connect(CoreStringNames::get_singleton()->changed, callable_mp(this, &VoxelLodTerrain::_on_stream_params_changed));
 	}
 
 	_on_stream_params_changed();
@@ -245,7 +247,7 @@ void VoxelLodTerrain::set_view_distance(int p_distance_in_voxels) {
 	_view_distance_voxels = p_distance_in_voxels;
 }
 
-Spatial *VoxelLodTerrain::get_viewer() const {
+Node3D *VoxelLodTerrain::get_viewer() const {
 	if (!is_inside_tree()) {
 		return nullptr;
 	}
@@ -256,7 +258,7 @@ Spatial *VoxelLodTerrain::get_viewer() const {
 	if (node == nullptr) {
 		return nullptr;
 	}
-	return Object::cast_to<Spatial>(node);
+	return Object::cast_to<Node3D>(node);
 }
 
 void VoxelLodTerrain::start_updater() {
@@ -453,7 +455,7 @@ void VoxelLodTerrain::_notification(int p_what) {
 			break;
 
 		case NOTIFICATION_ENTER_WORLD: {
-			World *world = *get_world();
+			World3D *world = *get_world_3d();
 			for (unsigned int lod_index = 0; lod_index < _lods.size(); ++lod_index) {
 				if (_lods[lod_index].map.is_valid()) {
 					_lods[lod_index].map->for_all_blocks([world](VoxelBlock *block) {
@@ -501,7 +503,7 @@ void VoxelLodTerrain::get_viewer_pos_and_direction(Vector3 &out_pos, Vector3 &ou
 
 	} else {
 		// TODO Have option to use viewport camera
-		Spatial *viewer = get_viewer();
+		Node3D *viewer = get_viewer();
 		if (viewer) {
 
 			Transform gt = viewer->get_global_transform();
@@ -1032,7 +1034,7 @@ void VoxelLodTerrain::_process() {
 			// The block will be made visible and meshed only by LodOctree
 			block->set_visible(false);
 			block->set_parent_visible(is_visible());
-			block->set_world(get_world());
+			block->set_world(get_world_3d());
 
 			Ref<ShaderMaterial> shader_material = _material;
 			if (shader_material.is_valid() && block->get_shader_material().is_null()) {
@@ -1678,7 +1680,7 @@ void VoxelLodTerrain::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "stream", PROPERTY_HINT_RESOURCE_TYPE, "VoxelStream"), "set_stream", "get_stream");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "view_distance"), "set_view_distance", "get_view_distance");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "lod_count"), "set_lod_count", "get_lod_count");
-	ADD_PROPERTY(PropertyInfo(Variant::REAL, "lod_split_scale"), "set_lod_split_scale", "get_lod_split_scale");
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "lod_split_scale"), "set_lod_split_scale", "get_lod_split_scale");
 	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "viewer_path"), "set_viewer_path", "get_viewer_path");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "material", PROPERTY_HINT_RESOURCE_TYPE, "Material"), "set_material", "get_material");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "generate_collisions"), "set_generate_collisions", "get_generate_collisions");
@@ -1687,4 +1689,6 @@ void VoxelLodTerrain::_bind_methods() {
 
 void VoxelLodTerrain::_b_save_all_modified_blocks() {
 	save_all_modified_blocks(true);
+}
+
 }

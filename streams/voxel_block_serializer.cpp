@@ -5,6 +5,8 @@
 #include "../voxel_memory_pool.h"
 #include <core/os/file_access.h>
 
+namespace Voxel {
+
 namespace {
 // TODO Introduce versionning
 const unsigned int BLOCK_TRAILING_MAGIC = 0x900df00d;
@@ -210,4 +212,6 @@ bool VoxelBlockSerializer::decompress_and_deserialize(FileAccess *f, unsigned in
 	ERR_FAIL_COND_V(read_size != size_to_read, false);
 
 	return decompress_and_deserialize(_compressed_data, out_voxel_buffer);
+}
+
 }

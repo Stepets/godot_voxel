@@ -5,6 +5,8 @@
 #include "voxel_generator.h"
 #include <modules/opensimplex/open_simplex_noise.h>
 
+namespace Voxel {
+
 class VoxelGeneratorNoise : public VoxelGenerator {
 	GDCLASS(VoxelGeneratorNoise, VoxelGenerator)
 
@@ -34,5 +36,7 @@ private:
 	float _height_start = 0;
 	float _height_range = 300;
 };
+
+}
 
 #endif // VOXEL_GENERATOR_NOISE_H

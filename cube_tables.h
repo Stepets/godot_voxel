@@ -4,6 +4,8 @@
 #include "math/vector3i.h"
 #include <core/math/vector3.h>
 
+namespace Voxel {
+
 namespace Cube {
 
 // Index convention used in some lookup tables
@@ -82,5 +84,7 @@ const unsigned int MOORE_NEIGHBORING_3D_COUNT = 26;
 extern const Vector3i g_moore_neighboring_3d[MOORE_NEIGHBORING_3D_COUNT];
 
 } // namespace Cube
+
+}
 
 #endif // CUBE_TABLES_H

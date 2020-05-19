@@ -6,6 +6,8 @@
 #include "../voxel_buffer.h"
 #include <scene/resources/mesh.h>
 
+namespace Voxel {
+
 class VoxelMesher : public Reference {
 	GDCLASS(VoxelMesher, Reference)
 public:
@@ -43,5 +45,7 @@ private:
 	int _minimum_padding = 0;
 	int _maximum_padding = 0;
 };
+
+}
 
 #endif // VOXEL_MESHER_H

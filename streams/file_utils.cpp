@@ -1,5 +1,7 @@
 #include "file_utils.h"
 
+namespace Voxel {
+
 const char *to_string(VoxelFileResult res) {
 	switch (res) {
 		case VOXEL_FILE_OK:
@@ -62,4 +64,6 @@ Error check_directory_created(const String &directory_path) {
 
 	memdelete(d);
 	return OK;
+}
+
 }

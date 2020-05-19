@@ -3,6 +3,8 @@
 #include <core/os/dir_access.h>
 #include <core/os/file_access.h>
 
+namespace Voxel {
+
 namespace {
 const uint8_t FORMAT_VERSION = 1;
 const char *FORMAT_META_MAGIC = "VXBM";
@@ -63,7 +65,7 @@ void VoxelStreamBlockFiles::emerge_block(Ref<VoxelBuffer> out_buffer, Vector3i o
 		{
 			uint8_t version;
 			VoxelFileResult err = check_magic_and_version(f, FORMAT_VERSION, FORMAT_BLOCK_MAGIC, version);
-			ERR_FAIL_COND_MSG(err != VOXEL_FILE_OK, ::to_string(err));
+			ERR_FAIL_COND_MSG(err != VOXEL_FILE_OK, Voxel::to_string(err));
 		}
 
 		// Configure depths, as they currently are only specified in the meta file.
@@ -92,7 +94,7 @@ void VoxelStreamBlockFiles::immerge_block(Ref<VoxelBuffer> buffer, Vector3i orig
 		if (res != VOXEL_FILE_OK && res != VOXEL_FILE_CANT_OPEN) {
 			// The file is present but there is a problem with it
 			String meta_path = _directory_path.plus_file(META_FILE_NAME);
-			ERR_PRINT(String("Could not read {0}: {1}").format(varray(meta_path, ::to_string(res))));
+			ERR_PRINT(String("Could not read {0}: {1}").format(varray(meta_path, Voxel::to_string(res))));
 			return;
 		}
 	}
@@ -265,4 +267,6 @@ void VoxelStreamBlockFiles::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_directory"), &VoxelStreamBlockFiles::get_directory);
 
 	ADD_PROPERTY(PropertyInfo(Variant::STRING, "directory", PROPERTY_HINT_DIR), "set_directory", "get_directory");
+}
+
 }

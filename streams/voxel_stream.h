@@ -5,6 +5,8 @@
 #include "voxel_block_request.h"
 #include <core/resource.h>
 
+namespace Voxel {
+
 // Provides access to a source of paged voxel data, which may load and save.
 // Must be implemented in a multi-thread-safe way.
 // If you are looking for a more specialized API to generate voxels, use VoxelGenerator.
@@ -49,5 +51,7 @@ protected:
 
 	Stats _stats;
 };
+
+}
 
 #endif // VOXEL_STREAM_H

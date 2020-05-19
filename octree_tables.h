@@ -1,6 +1,8 @@
 #ifndef OCTREE_TABLES_H
 #define OCTREE_TABLES_H
 
+namespace Voxel {
+
 namespace OctreeTables {
 
 //  Corners:                                    Octants:
@@ -42,5 +44,7 @@ const int g_octant_position[8][3]{
 };
 
 } // namespace OctreeTables
+
+}
 
 #endif // OCTREE_TABLES_H

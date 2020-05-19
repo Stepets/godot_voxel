@@ -6,6 +6,8 @@
 #include <scene/resources/mesh.h>
 #include <vector>
 
+namespace Voxel {
+
 namespace dmc {
 
 // Faster than SurfaceTool, only does what is needed to build a smooth mesh
@@ -52,5 +54,7 @@ private:
 };
 
 } // namespace dmc
+
+}
 
 #endif // MESH_BUILDER_H

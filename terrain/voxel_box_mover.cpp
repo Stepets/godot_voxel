@@ -1,6 +1,8 @@
 #include "voxel_box_mover.h"
 #include "voxel_map.h"
 
+namespace Voxel {
+
 static AABB expand_with_vector(AABB box, Vector3 v) {
 
 	if (v.x > 0) {
@@ -167,7 +169,7 @@ Vector3 VoxelBoxMover::get_motion(Vector3 pos, Vector3 motion, AABB aabb, VoxelT
 	}
 
 	// Calculate collisions
-	return ::get_motion(box, motion, potential_boxes);
+	return ::Voxel::get_motion(box, motion, potential_boxes);
 }
 
 void VoxelBoxMover::_bind_methods() {
@@ -180,4 +182,6 @@ Vector3 VoxelBoxMover::_b_get_motion(Vector3 pos, Vector3 motion, AABB aabb, Nod
 	VoxelTerrain *terrain = Object::cast_to<VoxelTerrain>(terrain_node);
 	ERR_FAIL_COND_V(terrain == NULL, Vector3());
 	return get_motion(pos, motion, aabb, terrain);
+}
+
 }

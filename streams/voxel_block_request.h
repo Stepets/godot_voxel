@@ -4,6 +4,8 @@
 #include "../math/vector3i.h"
 #include "../voxel_buffer.h"
 
+namespace Voxel {
+
 class VoxelBuffer;
 
 struct VoxelBlockRequest {
@@ -11,5 +13,7 @@ struct VoxelBlockRequest {
 	Vector3i origin_in_voxels;
 	int lod;
 };
+
+}
 
 #endif // VOXEL_BLOCK_REQUEST_H

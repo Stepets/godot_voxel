@@ -8,6 +8,8 @@
 #include <scene/resources/mesh.h>
 #include <vector>
 
+namespace Voxel {
+
 class VoxelMesherBlocky : public VoxelMesher {
 	GDCLASS(VoxelMesherBlocky, VoxelMesher)
 
@@ -49,5 +51,7 @@ private:
 	float _baked_occlusion_darkness;
 	bool _bake_occlusion;
 };
+
+}
 
 #endif // VOXEL_MESHER_BLOCKY_H

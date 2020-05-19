@@ -6,6 +6,8 @@
 
 #include <vector>
 
+namespace Voxel {
+
 // Pool based on a scenario where allocated blocks are often the same size.
 // A pool of blocks is assigned for each size.
 class VoxelMemoryPool {
@@ -34,7 +36,9 @@ private:
 
 	HashMap<uint32_t, Pool *> _pools;
 	unsigned int _used_blocks = 0;
-	Mutex *_mutex = nullptr;
+	Mutex _mutex;
 };
+
+}
 
 #endif // VOXEL_MEMORY_POOL_H

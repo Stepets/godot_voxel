@@ -5,6 +5,8 @@
 #include "voxel.h"
 #include <core/resource.h>
 
+namespace Voxel {
+
 class VoxelLibrary : public Resource {
 	GDCLASS(VoxelLibrary, Resource)
 
@@ -61,5 +63,7 @@ private:
 	DynamicBitset _side_pattern_culling;
 	unsigned int _side_pattern_count = 0;
 };
+
+}
 
 #endif // VOXEL_LIBRARY_H

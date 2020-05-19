@@ -5,6 +5,8 @@
 #include <core/os/os.h>
 #include <algorithm>
 
+namespace Voxel {
+
 namespace {
 const uint8_t FORMAT_VERSION = 2;
 const uint8_t FORMAT_VERSION_LEGACY_1 = 1;
@@ -187,7 +189,7 @@ void VoxelStreamRegionFiles::_immerge_block(Ref<VoxelBuffer> voxel_buffer, Vecto
 		if (load_res != VOXEL_FILE_OK && load_res != VOXEL_FILE_CANT_OPEN) {
 			// The file is present but there is a problem with it
 			String meta_path = _directory_path.plus_file(META_FILE_NAME);
-			ERR_PRINT(String("Could not read {0}: error {1}").format(varray(meta_path, ::to_string(load_res))));
+			ERR_PRINT(String("Could not read {0}: error {1}").format(varray(meta_path, Voxel::to_string(load_res))));
 			return;
 		}
 	}
@@ -404,17 +406,17 @@ void VoxelStreamRegionFiles::set_directory(String dirpath) {
 	}
 }
 
-static Array to_varray(const Vector3i &v) {
-	Array a;
-	a.resize(3);
-	a[0] = v.x;
-	a[1] = v.y;
-	a[2] = v.z;
-	return a;
-}
+// static Array to_varray(const Vector3i &v) {
+// 	Array a;
+// 	a.resize(3);
+// 	a[0] = v.x;
+// 	a[1] = v.y;
+// 	a[2] = v.z;
+// 	return a;
+// }
 
 static bool u8_from_json_variant(Variant v, uint8_t &i) {
-	ERR_FAIL_COND_V(v.get_type() != Variant::INT && v.get_type() != Variant::REAL, false);
+	ERR_FAIL_COND_V(v.get_type() != Variant::INT && v.get_type() != Variant::FLOAT, false);
 	int n = v;
 	ERR_FAIL_COND_V(n < 0 || n > 255, false);
 	i = v;
@@ -422,20 +424,20 @@ static bool u8_from_json_variant(Variant v, uint8_t &i) {
 }
 
 static bool s32_from_json_variant(Variant v, int &i) {
-	ERR_FAIL_COND_V(v.get_type() != Variant::INT && v.get_type() != Variant::REAL, false);
+	ERR_FAIL_COND_V(v.get_type() != Variant::INT && v.get_type() != Variant::FLOAT, false);
 	i = v;
 	return true;
 }
 
-static bool from_json_varray(Array a, Vector3i &v) {
-	ERR_FAIL_COND_V(a.size() != 3, false);
-	for (int i = 0; i < 3; ++i) {
-		if (!s32_from_json_variant(a[i], v[i])) {
-			return false;
-		}
-	}
-	return true;
-}
+// static bool from_json_varray(Array a, Vector3i &v) {
+// 	ERR_FAIL_COND_V(a.size() != 3, false);
+// 	for (int i = 0; i < 3; ++i) {
+// 		if (!s32_from_json_variant(a[i], v[i])) {
+// 			return false;
+// 		}
+// 	}
+// 	return true;
+// }
 
 static bool depth_from_json_variant(Variant &v, VoxelBuffer::Depth &d) {
 	uint8_t n;
@@ -684,7 +686,7 @@ VoxelStreamRegionFiles::CachedRegion *VoxelStreamRegionFiles::open_region(const 
 
 		} else if (check_result != VOXEL_FILE_OK) {
 			memdelete(existing_f);
-			ERR_PRINT(String("Could not open file {0}, {1}").format(varray(fpath, ::to_string(check_result))));
+			ERR_PRINT(String("Could not open file {0}, {1}").format(varray(fpath, Voxel::to_string(check_result))));
 			return nullptr;
 		}
 
@@ -821,7 +823,7 @@ int VoxelStreamRegionFiles::get_region_header_size() const {
 }
 
 static inline int convert_block_coordinate(int p_x, int old_size, int new_size) {
-	return ::udiv(p_x * old_size, new_size);
+	return Voxel::udiv(p_x * old_size, new_size);
 }
 
 static Vector3i convert_block_coordinates(Vector3i pos, Vector3i old_size, Vector3i new_size) {
@@ -1148,4 +1150,6 @@ void VoxelStreamRegionFiles::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "region_size_po2"), "set_region_size_po2", "get_region_size_po2");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "block_size_po2"), "set_block_size_po2", "get_region_size_po2");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "sector_size"), "set_sector_size", "get_sector_size");
+}
+
 }

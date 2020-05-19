@@ -4,6 +4,8 @@
 #include "voxel_generator_heightmap.h"
 #include <core/image.h>
 
+namespace Voxel {
+
 // Provides infinite tiling heightmap based on an image
 class VoxelGeneratorImage : public VoxelGeneratorHeightmap {
 	GDCLASS(VoxelGeneratorImage, VoxelGeneratorHeightmap)
@@ -27,5 +29,7 @@ private:
 	// Mostly here as demo/tweak. It's better recommended to use an EXR/float image.
 	bool _blur_enabled = false;
 };
+
+}
 
 #endif // HEADER_VOXEL_GENERATOR_IMAGE

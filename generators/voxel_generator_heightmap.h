@@ -5,6 +5,8 @@
 #include "voxel_generator.h"
 #include <core/image.h>
 
+namespace Voxel {
+
 class VoxelGeneratorHeightmap : public VoxelGenerator {
 	GDCLASS(VoxelGeneratorHeightmap, VoxelGenerator)
 public:
@@ -103,5 +105,7 @@ private:
 	Range _range;
 	float _iso_scale = 0.1;
 };
+
+}
 
 #endif // VOXEL_GENERATOR_HEIGHTMAP_H

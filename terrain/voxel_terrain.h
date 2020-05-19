@@ -7,7 +7,9 @@
 #include "voxel_data_loader.h"
 #include "voxel_mesh_updater.h"
 
-#include <scene/3d/spatial.h>
+#include <scene/3d/node_3d.h>
+
+namespace Voxel {
 
 class VoxelMap;
 class VoxelLibrary;
@@ -17,8 +19,8 @@ class VoxelTool;
 // Infinite paged terrain made of voxel blocks all with the same level of detail.
 // Voxels are polygonized around the viewer by distance in a large cubic space.
 // Data is streamed using a VoxelStream.
-class VoxelTerrain : public Spatial {
-	GDCLASS(VoxelTerrain, Spatial)
+class VoxelTerrain : public Node3D {
+	GDCLASS(VoxelTerrain, Node3D)
 public:
 	VoxelTerrain();
 	~VoxelTerrain();
@@ -86,7 +88,7 @@ private:
 	void stop_streamer();
 	void reset_map();
 
-	Spatial *get_viewer() const;
+	Node3D *get_viewer() const;
 
 	void immerge_block(Vector3i bpos);
 	void save_all_modified_blocks(bool with_copy);
@@ -135,5 +137,7 @@ private:
 
 	Stats _stats;
 };
+
+}
 
 #endif // VOXEL_TERRAIN_H

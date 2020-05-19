@@ -6,6 +6,8 @@
 #include "../voxel_mesher.h"
 #include <scene/resources/mesh.h>
 
+namespace Voxel {
+
 class VoxelMesherTransvoxel : public VoxelMesher {
 	GDCLASS(VoxelMesherTransvoxel, VoxelMesher)
 
@@ -56,5 +58,7 @@ private:
 	std::vector<Color> _output_extra;
 	std::vector<int> _output_indices;
 };
+
+}
 
 #endif // VOXEL_MESHER_TRANSVOXEL_H

@@ -4,6 +4,8 @@
 #include "vector3i.h"
 #include <core/variant.h>
 
+namespace Voxel {
+
 // TODO Could be renamed to something more sensical, like Box3i
 class Rect3i {
 
@@ -226,6 +228,8 @@ public:
 
 inline bool operator!=(const Rect3i &a, const Rect3i &b) {
 	return a.pos != b.pos || a.size != b.size;
+}
+
 }
 
 #endif // RECT3I_H

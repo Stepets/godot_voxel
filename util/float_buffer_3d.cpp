@@ -1,6 +1,8 @@
 #include "float_buffer_3d.h"
 #include "utility.h"
 
+namespace Voxel {
+
 FloatBuffer3D::~FloatBuffer3D() {
 	clear();
 }
@@ -77,4 +79,6 @@ float FloatBuffer3D::get_trilinear(float x, float y, float z) const {
 	Vector3 rpos(x - x0, y - y0, z - z0);
 
 	return interpolate(v0, v1, v2, v3, v4, v5, v6, v7, rpos);
+}
+
 }

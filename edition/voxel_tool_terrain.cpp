@@ -3,6 +3,8 @@
 #include "../terrain/voxel_terrain.h"
 #include "../util/voxel_raycast.h"
 
+namespace Voxel {
+
 VoxelToolTerrain::VoxelToolTerrain(VoxelTerrain *terrain, Ref<VoxelMap> map) {
 	ERR_FAIL_COND(terrain == nullptr);
 	_terrain = terrain;
@@ -83,4 +85,6 @@ void VoxelToolTerrain::_set_voxel_f(Vector3i pos, float v) {
 void VoxelToolTerrain::_post_edit(const Rect3i &box) {
 	ERR_FAIL_COND(_terrain == nullptr);
 	_terrain->make_area_dirty(box);
+}
+
 }

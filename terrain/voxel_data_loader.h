@@ -3,6 +3,8 @@
 
 #include "block_thread_manager.h"
 
+namespace Voxel {
+
 class VoxelStream;
 class VoxelBuffer;
 
@@ -42,5 +44,7 @@ private:
 	Mgr *_mgr = nullptr;
 	int _block_size_pow2 = 0;
 };
+
+}
 
 #endif // VOXEL_DATA_LOADER_H

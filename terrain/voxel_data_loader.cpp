@@ -2,6 +2,8 @@
 #include "../streams/voxel_stream.h"
 #include "../util/utility.h"
 
+namespace Voxel {
+
 VoxelDataLoader::VoxelDataLoader(unsigned int thread_count, Ref<VoxelStream> stream, unsigned int block_size_pow2) {
 
 	print_line("Constructing VoxelDataLoader");
@@ -132,4 +134,6 @@ void VoxelDataLoader::process_blocks_thread_func(const ArraySlice<InputBlock> in
 	//		ob.data.type = TYPE_SAVE;
 	//		++j;
 	//	}
+}
+
 }

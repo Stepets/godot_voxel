@@ -2,6 +2,8 @@
 #include "../terrain/voxel_lod_terrain.h"
 #include "../voxel_buffer.h"
 
+namespace Voxel {
+
 Vector3 VoxelRaycastResult::_b_get_position() const {
 	return position.to_vec3();
 }
@@ -238,4 +240,6 @@ void VoxelTool::_bind_methods() {
 	BIND_ENUM_CONSTANT(MODE_ADD);
 	BIND_ENUM_CONSTANT(MODE_REMOVE);
 	BIND_ENUM_CONSTANT(MODE_SET);
+}
+
 }

@@ -14,6 +14,8 @@
 #include <functional>
 #include <vector>
 
+namespace Voxel {
+
 // Base structure for an asynchronous block processing manager using threads.
 // It is the same for block loading and rendering, hence made a generic one.
 // - Push requests and pop requests in batch
@@ -124,9 +126,7 @@ public:
 			JobData &job = _jobs[i];
 			CRASH_COND(job.thread != nullptr);
 
-			job.input_mutex = Mutex::create();
-			job.output_mutex = Mutex::create();
-			job.semaphore = Semaphore::create();
+			job.semaphore = memnew(Semaphore);
 			job.thread = Thread::create(_thread_func, &job);
 			job.needs_sort = true;
 			job.processor = processors[i];
@@ -150,8 +150,6 @@ public:
 
 			memdelete(job.thread);
 			memdelete(job.semaphore);
-			memdelete(job.input_mutex);
-			memdelete(job.output_mutex);
 		}
 	}
 
@@ -168,7 +166,7 @@ public:
 
 			JobData &job = _jobs[job_index];
 
-			job.input_mutex->lock();
+			job.input_mutex.lock();
 
 			highest_pending_count = MAX(highest_pending_count, job.shared_input.blocks.size());
 			lowest_pending_count = MIN(lowest_pending_count, job.shared_input.blocks.size());
@@ -238,7 +236,7 @@ public:
 
 			bool should_run = !job.shared_input.is_empty();
 
-			job.input_mutex->unlock();
+			job.input_mutex.unlock();
 
 			if (should_run) {
 				job.semaphore->post();
@@ -293,8 +291,8 @@ private:
 		//------------------------
 		Input shared_input;
 		Output shared_output;
-		Mutex *input_mutex = nullptr;
-		Mutex *output_mutex = nullptr;
+		Mutex input_mutex;
+		Mutex output_mutex;
 		// Indexes which blocks are present in shared_input,
 		// so if we push a duplicate request with the same coordinates, we can discard it without a linear search
 		FixedArray<HashMap<Vector3i, int, Vector3iHasher>, VoxelConstants::MAX_LOD> shared_input_block_indexes;
@@ -617,5 +615,7 @@ private:
 	JobData _jobs[MAX_JOBS];
 	unsigned int _job_count = 0;
 };
+
+}
 
 #endif // VOXEL_BLOCK_THREAD_MANAGER_H

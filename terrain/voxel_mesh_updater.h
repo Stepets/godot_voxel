@@ -10,6 +10,8 @@
 
 #include "block_thread_manager.h"
 
+namespace Voxel {
+
 class VoxelMeshUpdater {
 public:
 	struct InputBlockData {
@@ -54,5 +56,7 @@ private:
 	int _minimum_padding = 0;
 	int _maximum_padding = 0;
 };
+
+}
 
 #endif // VOXEL_MESH_UPDATER_H

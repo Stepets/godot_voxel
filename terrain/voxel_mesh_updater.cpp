@@ -4,6 +4,8 @@
 #include "voxel_lod_terrain.h"
 #include <core/os/os.h>
 
+namespace Voxel {
+
 VoxelMeshUpdater::VoxelMeshUpdater(unsigned int thread_count, MeshingParams params) {
 
 	print_line("Constructing VoxelMeshUpdater");
@@ -84,4 +86,6 @@ void VoxelMeshUpdater::process_blocks_thread_func(
 			smooth_mesher->build(output.smooth_surfaces, input);
 		}
 	}
+}
+
 }

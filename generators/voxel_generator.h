@@ -3,6 +3,8 @@
 
 #include "../streams/voxel_stream.h"
 
+namespace Voxel {
+
 // TODO I would like VoxelGenerator to not inherit VoxelStream
 // because it gets members that make no sense with generators
 
@@ -27,5 +29,7 @@ protected:
 
 	void _b_generate_block(Ref<VoxelBuffer> out_buffer, Vector3 origin_in_voxels, int lod);
 };
+
+}
 
 #endif // VOXEL_GENERATOR_H

@@ -3,6 +3,8 @@
 
 #include "voxel_generator_heightmap.h"
 
+namespace Voxel {
+
 class VoxelGeneratorWaves : public VoxelGeneratorHeightmap {
 	GDCLASS(VoxelGeneratorWaves, VoxelGeneratorHeightmap)
 
@@ -26,5 +28,7 @@ private:
 	Vector2 _pattern_size;
 	Vector2 _pattern_offset;
 };
+
+}
 
 #endif // VOXEL_GENERATOR_WAVES_H

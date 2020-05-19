@@ -21,6 +21,8 @@
 #define VOXEL_PROFILE_END() VOXEL_PROFILE_END_K(VOXEL_FILE_LINE_STR)
 #define VOXEL_PROFILE_SCOPE(_scopename) VOXEL_PROFILE_SCOPE_K(_scopename, VOXEL_FILE_LINE_STR)
 
+namespace Voxel {
+
 class ZProfiler {
 public:
 	ZProfiler();
@@ -67,6 +69,8 @@ struct ZProfilerScope {
 		ZProfiler::get_thread_profiler().end();
 	}
 };
+
+}
 
 #else
 

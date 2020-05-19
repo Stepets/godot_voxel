@@ -4,6 +4,8 @@
 #include "voxel_terrain.h"
 #include <core/math/aabb.h>
 
+namespace Voxel {
+
 // Helper to get simple AABB physics
 class VoxelBoxMover : public Reference {
 	GDCLASS(VoxelBoxMover, Reference)
@@ -17,5 +19,7 @@ private:
 
 	std::vector<AABB> _colliding_boxes;
 };
+
+}
 
 #endif // VOXEL_BOX_MOVER_H

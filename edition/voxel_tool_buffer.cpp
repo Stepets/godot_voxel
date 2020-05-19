@@ -1,6 +1,8 @@
 #include "voxel_tool_buffer.h"
 #include "../voxel_buffer.h"
 
+namespace Voxel {
+
 VoxelToolBuffer::VoxelToolBuffer(Ref<VoxelBuffer> vb) {
 	ERR_FAIL_COND(vb.is_null());
 	_buffer = vb;
@@ -34,4 +36,6 @@ void VoxelToolBuffer::_set_voxel_f(Vector3i pos, float v) {
 void VoxelToolBuffer::_post_edit(const Rect3i &box) {
 	ERR_FAIL_COND(_buffer.is_null());
 	// Nothing special to do
+}
+
 }

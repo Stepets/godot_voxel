@@ -4,12 +4,14 @@
 #include "../../util/utility.h"
 #include <core/os/os.h>
 
+namespace Voxel {
+
 namespace {
 
 template <typename T>
-void raw_copy_to(PoolVector<T> &to, const Vector<T> &from) {
+void raw_copy_to(Vector<T> &to, const Vector<T> &from) {
 	to.resize(from.size());
-	typename PoolVector<T>::Write w = to.write();
+	typename Vector<T>::Write w = to.write();
 	memcpy(w.ptr(), from.ptr(), from.size() * sizeof(T));
 }
 
@@ -455,11 +457,11 @@ void VoxelMesherBlocky::build(VoxelMesher::Output &output, const VoxelMesher::In
 			mesh_arrays.resize(Mesh::ARRAY_MAX);
 
 			{
-				PoolVector<Vector3> positions;
-				PoolVector<Vector2> uvs;
-				PoolVector<Vector3> normals;
-				PoolVector<Color> colors;
-				PoolVector<int> indices;
+				Vector<Vector3> positions;
+				Vector<Vector2> uvs;
+				Vector<Vector3> normals;
+				Vector<Color> colors;
+				Vector<int> indices;
 
 				raw_copy_to(positions, arrays.positions);
 				raw_copy_to(uvs, arrays.uvs);
@@ -503,4 +505,6 @@ void VoxelMesherBlocky::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("set_occlusion_darkness", "value"), &VoxelMesherBlocky::set_occlusion_darkness);
 	ClassDB::bind_method(D_METHOD("get_occlusion_darkness"), &VoxelMesherBlocky::get_occlusion_darkness);
+}
+
 }

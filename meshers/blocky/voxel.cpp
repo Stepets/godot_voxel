@@ -2,10 +2,12 @@
 #include "voxel_library.h"
 #include "voxel_mesher_blocky.h" // TODO Only required because of MAX_MATERIALS... could be enough inverting that dependency
 
+namespace Voxel {
+
 #define STRLEN(x) (sizeof(x) / sizeof(x[0]))
 
 Voxel::Voxel() :
-		_library(0),
+		_library((uint64_t) 0),
 		_id(-1),
 		_material_id(0),
 		_is_transparent(false),
@@ -89,7 +91,7 @@ void Voxel::_get_property_list(List<PropertyInfo> *p_list) const {
 
 	if (_geometry_type == GEOMETRY_CUBE) {
 
-		p_list->push_back(PropertyInfo(Variant::REAL, "cube_geometry/padding_y"));
+		p_list->push_back(PropertyInfo(Variant::FLOAT, "cube_geometry/padding_y"));
 
 		p_list->push_back(PropertyInfo(Variant::VECTOR2, "cube_tiles/left"));
 		p_list->push_back(PropertyInfo(Variant::VECTOR2, "cube_tiles/right"));
@@ -174,7 +176,7 @@ Voxel::GeometryType Voxel::get_geometry_type() const {
 
 void Voxel::set_library(Ref<VoxelLibrary> lib) {
 	if (lib.is_null()) {
-		_library = 0;
+		_library = (uint64_t) 0;
 	} else {
 		_library = lib->get_instance_id();
 	}
@@ -185,7 +187,7 @@ void Voxel::set_library(Ref<VoxelLibrary> lib) {
 }
 
 VoxelLibrary *Voxel::get_library() const {
-	if (_library == 0) {
+	if (((uint64_t)_library) == 0) {
 		return NULL;
 	}
 	Object *v = ObjectDB::get_instance(_library);
@@ -209,10 +211,10 @@ void Voxel::set_custom_mesh(Ref<Mesh> mesh) {
 	}
 
 	Array arrays = mesh->surface_get_arrays(0);
-	PoolIntArray indices = arrays[Mesh::ARRAY_INDEX];
-	PoolVector3Array positions = arrays[Mesh::ARRAY_VERTEX];
-	PoolVector3Array normals = arrays[Mesh::ARRAY_NORMAL];
-	PoolVector2Array uvs = arrays[Mesh::ARRAY_TEX_UV];
+	PackedInt32Array indices = arrays[Mesh::ARRAY_INDEX];
+	PackedVector3Array positions = arrays[Mesh::ARRAY_VERTEX];
+	PackedVector3Array normals = arrays[Mesh::ARRAY_NORMAL];
+	PackedVector2Array uvs = arrays[Mesh::ARRAY_TEX_UV];
 
 	ERR_FAIL_COND_MSG(indices.size() % 3 != 0, "Mesh is empty or does not contain triangles");
 	ERR_FAIL_COND(normals.size() == 0);
@@ -250,7 +252,7 @@ void Voxel::set_custom_mesh(Ref<Mesh> mesh) {
 
 	if (uvs.size() == 0) {
 		// TODO Properly generate UVs if there arent any
-		uvs = PoolVector2Array();
+		uvs = PackedVector2Array();
 		uvs.resize(positions.size());
 	}
 
@@ -259,10 +261,10 @@ void Voxel::set_custom_mesh(Ref<Mesh> mesh) {
 	// Separate triangles belonging to faces of the cube
 
 	{
-		PoolIntArray::Read indices_read = indices.read();
-		PoolVector3Array::Read positions_read = positions.read();
-		PoolVector3Array::Read normals_read = normals.read();
-		PoolVector2Array::Read uvs_read = uvs.read();
+		const int32_t *indices_read = indices.ptr();
+		const Vector3 *positions_read = positions.ptr();
+		const Vector3 *normals_read = normals.ptr();
+		const Vector2 *uvs_read = uvs.ptr();
 
 		FixedArray<HashMap<int, int>, Cube::SIDE_COUNT> added_side_indices;
 		HashMap<int, int> added_regular_indices;
@@ -506,4 +508,6 @@ void Voxel::_b_set_collision_aabbs(Array array) {
 		const AABB aabb = array[i];
 		_collision_aabbs[i] = aabb;
 	}
+}
+
 }

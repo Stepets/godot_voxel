@@ -11,6 +11,8 @@
 #include <core/math/math_funcs.h>
 #include <string.h>
 
+namespace Voxel {
+
 namespace {
 
 inline uint8_t *allocate_channel_data(uint32_t size) {
@@ -416,13 +418,13 @@ bool VoxelBuffer::is_uniform(unsigned int channel_index) const {
 	// Channel isn't optimized, so must look at each voxel
 	switch (channel.depth) {
 		case DEPTH_8_BIT:
-			return ::is_uniform<uint8_t>(channel.data, volume);
+			return Voxel::is_uniform<uint8_t>(channel.data, volume);
 		case DEPTH_16_BIT:
-			return ::is_uniform<uint16_t>(channel.data, volume);
+			return Voxel::is_uniform<uint16_t>(channel.data, volume);
 		case DEPTH_32_BIT:
-			return ::is_uniform<uint32_t>(channel.data, volume);
+			return Voxel::is_uniform<uint32_t>(channel.data, volume);
 		case DEPTH_64_BIT:
-			return ::is_uniform<uint64_t>(channel.data, volume);
+			return Voxel::is_uniform<uint64_t>(channel.data, volume);
 		default:
 			CRASH_NOW();
 			break;
@@ -581,7 +583,7 @@ void VoxelBuffer::create_channel(int i, Vector3i size, uint64_t defval) {
 uint32_t VoxelBuffer::get_size_in_bytes_for_volume(Vector3i size, Depth depth) {
 	// Calculate appropriate size based on bit depth
 	const unsigned int volume = size.x * size.y * size.z;
-	const unsigned int bits = volume * ::get_depth_bit_count(depth);
+	const unsigned int bits = volume * Voxel::get_depth_bit_count(depth);
 	unsigned int size_in_bytes = (bits >> 3);
 	return size_in_bytes;
 }
@@ -718,13 +720,12 @@ VoxelBuffer::Depth VoxelBuffer::get_channel_depth(unsigned int channel_index) co
 }
 
 uint32_t VoxelBuffer::get_depth_bit_count(Depth d) {
-	return ::get_depth_bit_count(d);
+	return Voxel::get_depth_bit_count(d);
 }
 
 Ref<Image> VoxelBuffer::debug_print_sdf_to_image_top_down() {
 	Image *im = memnew(Image);
 	im->create(_size.x, _size.z, false, Image::FORMAT_RGB8);
-	im->lock();
 	Vector3i pos;
 	for (pos.z = 0; pos.z < _size.z; ++pos.z) {
 		for (pos.x = 0; pos.x < _size.x; ++pos.x) {
@@ -739,7 +740,6 @@ Ref<Image> VoxelBuffer::debug_print_sdf_to_image_top_down() {
 			im->set_pixel(pos.x, pos.z, Color(c, c, c));
 		}
 	}
-	im->unlock();
 	return Ref<Image>(im);
 }
 
@@ -803,4 +803,6 @@ void VoxelBuffer::_b_copy_channel_from_area(Ref<VoxelBuffer> other, Vector3 src_
 void VoxelBuffer::_b_downscale_to(Ref<VoxelBuffer> dst, Vector3 src_min, Vector3 src_max, Vector3 dst_min) const {
 	ERR_FAIL_COND(dst.is_null());
 	downscale_to(**dst, Vector3i(src_min), Vector3i(src_max), Vector3i(dst_min));
+}
+
 }

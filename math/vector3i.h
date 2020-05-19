@@ -5,6 +5,8 @@
 #include <core/hashfuncs.h>
 #include <core/math/vector3.h>
 
+namespace Voxel {
+
 struct Vector3i {
 
 	static const unsigned int AXIS_X = 0;
@@ -135,15 +137,15 @@ struct Vector3i {
 	}
 
 	inline Vector3i udiv(int d) const {
-		return Vector3i(::udiv(x, d), ::udiv(y, d), ::udiv(z, d));
+		return Vector3i(Voxel::udiv(x, d), Voxel::udiv(y, d), Voxel::udiv(z, d));
 	}
 
 	inline Vector3i udiv(const Vector3i d) const {
-		return Vector3i(::udiv(x, d.x), ::udiv(y, d.y), ::udiv(z, d.z));
+		return Vector3i(Voxel::udiv(x, d.x), Voxel::udiv(y, d.y), Voxel::udiv(z, d.z));
 	}
 
 	inline Vector3i wrap(const Vector3i d) const {
-		return Vector3i(::wrap(x, d.x), ::wrap(y, d.y), ::wrap(z, d.z));
+		return Vector3i(Voxel::wrap(x, d.x), Voxel::wrap(y, d.y), Voxel::wrap(z, d.z));
 	}
 
 	inline unsigned int get_zxy_index(const Vector3i area_size) const {
@@ -163,7 +165,7 @@ struct Vector3i {
 	}
 
 	static inline Vector3i min(const Vector3i a, const Vector3i b) {
-		return Vector3i(::min(a.x, b.x), ::min(a.y, b.y), ::min(a.z, b.z));
+		return Vector3i(Voxel::min(a.x, b.x), Voxel::min(a.y, b.y), Voxel::min(a.z, b.z));
 	}
 
 private:
@@ -248,5 +250,7 @@ struct Vector3iHasher {
 		return hash_djb2_one_32(v.z, hash);
 	}
 };
+
+}
 
 #endif // VOXEL_VECTOR3I_H

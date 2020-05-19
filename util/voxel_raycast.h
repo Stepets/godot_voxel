@@ -1,6 +1,8 @@
 #include "../math/vector3i.h"
 #include <core/math/vector3.h>
 
+namespace Voxel {
+
 template <typename Predicate_F> // f(Vector3i position) -> bool
 bool voxel_raycast(
 		Vector3 ray_origin,
@@ -141,4 +143,6 @@ bool voxel_raycast(
 	out_prev_pos = hit_prev_pos;
 
 	return true;
+}
+
 }

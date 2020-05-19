@@ -1,5 +1,7 @@
 #include "voxel_mesher.h"
 
+namespace Voxel {
+
 Ref<Mesh> VoxelMesher::build_mesh(Ref<VoxelBuffer> voxels) {
 
 	ERR_FAIL_COND_V(voxels.is_null(), Ref<ArrayMesh>());
@@ -16,7 +18,7 @@ Ref<Mesh> VoxelMesher::build_mesh(Ref<VoxelBuffer> voxels) {
 	mesh.instance();
 
 	for (int i = 0; i < output.surfaces.size(); ++i) {
-		mesh->add_surface_from_arrays(output.primitive_type, output.surfaces[i], Array(), output.compression_flags);
+		mesh->add_surface_from_arrays(output.primitive_type, output.surfaces[i], Array(), Dictionary(), output.compression_flags);
 	}
 
 	return mesh;
@@ -53,4 +55,6 @@ void VoxelMesher::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("build_mesh", "voxel_buffer"), &VoxelMesher::build_mesh);
 	ClassDB::bind_method(D_METHOD("get_minimum_padding"), &VoxelMesher::get_minimum_padding);
 	ClassDB::bind_method(D_METHOD("get_maximum_padding"), &VoxelMesher::get_maximum_padding);
+}
+
 }

@@ -5,6 +5,8 @@
 #include <core/error_macros.h>
 #include <vector>
 
+namespace Voxel {
+
 // View into an array, referencing a pointer and a size.
 template <typename T>
 class ArraySlice {
@@ -74,5 +76,7 @@ private:
 	T *_ptr;
 	size_t _size;
 };
+
+}
 
 #endif // ARRAY_SLICE_H

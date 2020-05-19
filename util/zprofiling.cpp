@@ -7,6 +7,8 @@
 #include <thread>
 #include <unordered_map>
 
+namespace Voxel {
+
 namespace {
 thread_local ZProfiler g_profiler;
 }
@@ -168,6 +170,8 @@ void ZProfiler::dump() {
 	}
 
 	ofs.close();
+}
+
 }
 
 #endif // VOXEL_PROFILING

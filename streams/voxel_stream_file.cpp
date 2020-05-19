@@ -2,6 +2,8 @@
 #include <core/os/file_access.h>
 #include <core/os/os.h>
 
+namespace Voxel {
+
 void VoxelStreamFile::set_save_fallback_output(bool enabled) {
 	_save_fallback_output = enabled;
 }
@@ -81,4 +83,6 @@ void VoxelStreamFile::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "fallback_stream", PROPERTY_HINT_RESOURCE_TYPE, "VoxelStream"), "set_fallback_stream", "get_fallback_stream");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "save_fallback_output"), "set_save_fallback_output", "get_save_fallback_output");
+}
+
 }

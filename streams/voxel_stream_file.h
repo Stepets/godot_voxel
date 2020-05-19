@@ -6,6 +6,8 @@
 
 class FileAccess;
 
+namespace Voxel {
+
 // TODO Could be worth integrating with Godot ResourceLoader
 // Loads and saves blocks to the filesystem.
 // If a block is not found, a fallback stream can be used (usually to generate the block).
@@ -40,5 +42,7 @@ private:
 	Ref<VoxelStream> _fallback_stream;
 	bool _save_fallback_output = true;
 };
+
+}
 
 #endif // VOXEL_STREAM_FILE_H

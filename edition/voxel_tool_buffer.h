@@ -3,6 +3,8 @@
 
 #include "voxel_tool.h"
 
+namespace Voxel {
+
 class VoxelBuffer;
 
 class VoxelToolBuffer : public VoxelTool {
@@ -22,5 +24,7 @@ protected:
 private:
 	Ref<VoxelBuffer> _buffer;
 };
+
+}
 
 #endif // VOXEL_TOOL_BUFFER_H

@@ -1,5 +1,7 @@
 #include "voxel_generator_noise_2d.h"
 
+namespace Voxel {
+
 VoxelGeneratorNoise2D::VoxelGeneratorNoise2D() {
 }
 
@@ -50,4 +52,6 @@ void VoxelGeneratorNoise2D::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "noise", PROPERTY_HINT_RESOURCE_TYPE, "OpenSimplexNoise"), "set_noise", "get_noise");
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "curve", PROPERTY_HINT_RESOURCE_TYPE, "Curve"), "set_curve", "get_curve");
+}
+
 }

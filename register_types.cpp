@@ -22,13 +22,14 @@
 #include "voxel_string_names.h"
 
 void register_voxel_types() {
+	using namespace Voxel;
 
 	// Storage
 	ClassDB::register_class<VoxelBuffer>();
 	ClassDB::register_class<VoxelMap>();
 
 	// Voxel types
-	ClassDB::register_class<Voxel>();
+	ClassDB::register_class<::Voxel::Voxel>();
 	ClassDB::register_class<VoxelLibrary>();
 
 	// Nodes
@@ -70,6 +71,7 @@ void register_voxel_types() {
 }
 
 void unregister_voxel_types() {
+	using namespace Voxel;
 
 	unsigned int used_blocks = VoxelMemoryPool::get_singleton()->debug_get_used_blocks();
 	if (used_blocks > 0) {

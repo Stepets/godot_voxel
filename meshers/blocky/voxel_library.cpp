@@ -2,6 +2,8 @@
 #include <core/os/os.h>
 #include <bitset>
 
+namespace Voxel {
+
 VoxelLibrary::VoxelLibrary() :
 		Resource(),
 		_atlas_size(1) {
@@ -398,4 +400,6 @@ void VoxelLibrary::_bind_methods() {
 Ref<Voxel> VoxelLibrary::_b_get_voxel(unsigned int id) {
 	ERR_FAIL_COND_V(id >= _voxel_types.size(), Ref<Voxel>());
 	return _voxel_types[id];
+}
+
 }

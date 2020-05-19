@@ -1,6 +1,8 @@
 #ifndef MARCHING_CUBES_TABLES_H
 #define MARCHING_CUBES_TABLES_H
 
+namespace Voxel {
+
 namespace MarchingCubes {
 
 // Marching Cubes tables from the public domain code found on http://local.wasp.uwa.edu.au/~pbourke/geometry/polygonise/
@@ -346,5 +348,7 @@ int ms_triangles[18][13] = {
 };
 
 } // namespace MarchingCubes
+
+}
 
 #endif // MARCHING_CUBES_TABLES_H

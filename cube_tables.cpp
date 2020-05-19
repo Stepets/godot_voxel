@@ -1,5 +1,7 @@
 #include "cube_tables.h"
 
+namespace Voxel {
+
 namespace Cube {
 
 // The following tables respect the following conventions
@@ -166,3 +168,5 @@ const Vector3i g_moore_neighboring_3d[MOORE_NEIGHBORING_3D_COUNT] = {
 };
 
 } // namespace Cube
+
+}

@@ -3,6 +3,8 @@
 
 #include "voxel_tool.h"
 
+namespace Voxel {
+
 class VoxelTerrain;
 class VoxelMap;
 
@@ -25,5 +27,7 @@ private:
 	VoxelTerrain *_terrain = nullptr;
 	Ref<VoxelMap> _map;
 };
+
+}
 
 #endif // VOXEL_TOOL_TERRAIN_H

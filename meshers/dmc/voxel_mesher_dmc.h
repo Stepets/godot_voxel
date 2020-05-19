@@ -7,6 +7,8 @@
 #include "mesh_builder.h"
 #include <scene/resources/mesh.h>
 
+namespace Voxel {
+
 namespace dmc {
 
 struct OctreeNode;
@@ -129,8 +131,10 @@ private:
 	Stats _stats;
 };
 
-VARIANT_ENUM_CAST(VoxelMesherDMC::SimplifyMode)
-VARIANT_ENUM_CAST(VoxelMesherDMC::MeshMode)
-VARIANT_ENUM_CAST(VoxelMesherDMC::SeamMode)
+}
+
+VARIANT_ENUM_CAST(Voxel::VoxelMesherDMC::SimplifyMode)
+VARIANT_ENUM_CAST(Voxel::VoxelMesherDMC::MeshMode)
+VARIANT_ENUM_CAST(Voxel::VoxelMesherDMC::SeamMode)
 
 #endif // VOXEL_MESHER_DMC_H

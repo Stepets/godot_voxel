@@ -5,6 +5,8 @@
 #include <core/os/dir_access.h>
 #include <core/os/file_access.h>
 
+namespace Voxel {
+
 inline Vector3i get_vec3u8(FileAccess *f) {
 	Vector3i v;
 	v.x = f->get_8();
@@ -45,5 +47,7 @@ enum VoxelFileResult {
 const char *to_string(VoxelFileResult res);
 VoxelFileResult check_magic_and_version(FileAccess *f, uint8_t expected_version, const char *expected_magic, uint8_t &out_version);
 Error check_directory_created(const String &directory_path);
+
+}
 
 #endif // FILE_UTILS_H

@@ -9,7 +9,9 @@
 #include <core/core_string_names.h>
 #include <core/engine.h>
 #include <core/os/os.h>
-#include <scene/3d/mesh_instance.h>
+#include <scene/3d/mesh_instance_3d.h>
+
+namespace Voxel {
 
 const uint32_t MAIN_THREAD_MESHING_BUDGET_MS = 8;
 
@@ -87,7 +89,7 @@ bool VoxelTerrain::_get(const StringName &p_name, Variant &r_ret) const {
 void VoxelTerrain::_get_property_list(List<PropertyInfo> *p_list) const {
 
 	for (unsigned int i = 0; i < VoxelMesherBlocky::MAX_MATERIALS; ++i) {
-		p_list->push_back(PropertyInfo(Variant::OBJECT, "material/" + itos(i), PROPERTY_HINT_RESOURCE_TYPE, "ShaderMaterial,SpatialMaterial"));
+		p_list->push_back(PropertyInfo(Variant::OBJECT, "material/" + itos(i), PROPERTY_HINT_RESOURCE_TYPE, "ShaderMaterial,StandardMaterial3D"));
 	}
 }
 
@@ -97,15 +99,15 @@ void VoxelTerrain::set_stream(Ref<VoxelStream> p_stream) {
 	}
 
 	if (_stream.is_valid()) {
-		if (_stream->is_connected(CoreStringNames::get_singleton()->changed, this, "_on_stream_params_changed")) {
-			_stream->disconnect(CoreStringNames::get_singleton()->changed, this, "_on_stream_params_changed");
+		if (_stream->is_connected(CoreStringNames::get_singleton()->changed, callable_mp(this, &VoxelTerrain::_on_stream_params_changed))) {
+			_stream->disconnect(CoreStringNames::get_singleton()->changed, callable_mp(this, &VoxelTerrain::_on_stream_params_changed));
 		}
 	}
 
 	_stream = p_stream;
 
 	if (_stream.is_valid()) {
-		_stream->connect(CoreStringNames::get_singleton()->changed, this, "_on_stream_params_changed");
+		_stream->connect(CoreStringNames::get_singleton()->changed, callable_mp(this, &VoxelTerrain::_on_stream_params_changed));
 	}
 
 	_on_stream_params_changed();
@@ -237,7 +239,7 @@ NodePath VoxelTerrain::get_viewer_path() const {
 	return _viewer_path;
 }
 
-Spatial *VoxelTerrain::get_viewer() const {
+Node3D *VoxelTerrain::get_viewer() const {
 	if (!is_inside_tree()) {
 		return nullptr;
 	}
@@ -248,7 +250,7 @@ Spatial *VoxelTerrain::get_viewer() const {
 	if (node == nullptr) {
 		return nullptr;
 	}
-	return Object::cast_to<Spatial>(node);
+	return Object::cast_to<Node3D>(node);
 }
 
 void VoxelTerrain::set_material(unsigned int id, Ref<Material> material) {
@@ -608,8 +610,8 @@ void VoxelTerrain::make_area_dirty(Rect3i box) {
 void VoxelTerrain::_notification(int p_what) {
 
 	struct SetWorldAction {
-		World *world;
-		SetWorldAction(World *w) :
+		World3D *world;
+		SetWorldAction(World3D *w) :
 				world(w) {}
 		void operator()(VoxelBlock *block) {
 			block->set_world(world);
@@ -645,7 +647,7 @@ void VoxelTerrain::_notification(int p_what) {
 
 		case NOTIFICATION_ENTER_WORLD: {
 			ERR_FAIL_COND(_map.is_null());
-			_map->for_all_blocks(SetWorldAction(*get_world()));
+			_map->for_all_blocks(SetWorldAction(*get_world_3d()));
 		} break;
 
 		case NOTIFICATION_EXIT_WORLD:
@@ -692,7 +694,7 @@ void VoxelTerrain::get_viewer_pos_and_direction(Vector3 &out_pos, Vector3 &out_d
 
 	} else {
 		// TODO Have option to use viewport camera
-		Spatial *viewer = get_viewer();
+		Node3D *viewer = get_viewer();
 		if (viewer) {
 
 			Transform gt = viewer->get_global_transform();
@@ -853,7 +855,7 @@ void VoxelTerrain::_process() {
 			VoxelBlock *block = _map->get_block(block_pos);
 			bool update_neighbors = block == nullptr;
 			block = _map->set_block_buffer(block_pos, ob.data.voxels_loaded);
-			block->set_world(get_world());
+			block->set_world(get_world_3d());
 
 			// TODO The following code appears to have order-dependency with block loading.
 			// i.e if block loading responses arrive in a different order they were requested in,
@@ -1031,7 +1033,7 @@ void VoxelTerrain::_process() {
 
 				collidable_surfaces.push_back(surface);
 
-				mesh->add_surface_from_arrays(data.blocky_surfaces.primitive_type, surface, Array(), data.blocky_surfaces.compression_flags);
+				mesh->add_surface_from_arrays(data.blocky_surfaces.primitive_type, surface, Array(), Dictionary(), data.blocky_surfaces.compression_flags);
 				mesh->surface_set_material(surface_index, _materials[i]);
 				++surface_index;
 			}
@@ -1050,7 +1052,7 @@ void VoxelTerrain::_process() {
 
 				collidable_surfaces.push_back(surface);
 
-				mesh->add_surface_from_arrays(data.smooth_surfaces.primitive_type, surface, Array(), data.smooth_surfaces.compression_flags);
+				mesh->add_surface_from_arrays(data.smooth_surfaces.primitive_type, surface, Array(), Dictionary(), data.smooth_surfaces.compression_flags);
 				mesh->surface_set_material(surface_index, _materials[i]);
 				++surface_index;
 			}
@@ -1072,7 +1074,7 @@ void VoxelTerrain::_process() {
 }
 
 Ref<VoxelTool> VoxelTerrain::get_voxel_tool() {
-	Ref<VoxelTool> vt = memnew(VoxelToolTerrain(this, _map));
+	Ref<VoxelTool> vt = memnew( VoxelToolTerrain (this, _map));
 	if (_stream.is_valid()) {
 		if (_stream->get_used_channels_mask() & (1 << VoxelBuffer::CHANNEL_SDF)) {
 			vt->set_channel(VoxelBuffer::CHANNEL_SDF);
@@ -1124,4 +1126,6 @@ void VoxelTerrain::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "view_distance"), "set_view_distance", "get_view_distance");
 	ADD_PROPERTY(PropertyInfo(Variant::NODE_PATH, "viewer_path"), "set_viewer_path", "get_viewer_path");
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "generate_collisions"), "set_generate_collisions", "get_generate_collisions");
+}
+
 }

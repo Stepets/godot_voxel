@@ -5,6 +5,8 @@
 #include "../octree_tables.h"
 #include "../voxel_constants.h"
 
+namespace Voxel {
+
 // Octree designed to handle level of detail.
 class LodOctree {
 public:
@@ -275,5 +277,7 @@ private:
 // Notes:
 // Population of an octree given its depth, thanks to Sage:
 // ((1 << 3 * (depth + 1)) - 1 ) / 7
+
+}
 
 #endif // LOD_OCTREE_H

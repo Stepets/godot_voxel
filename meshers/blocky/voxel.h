@@ -5,6 +5,8 @@
 #include "../../util/fixed_array.h"
 #include <core/resource.h>
 
+namespace Voxel {
+
 class VoxelLibrary;
 
 // TODO Rename VoxelBlockyType?
@@ -138,7 +140,10 @@ private:
 	// TODO Child voxel types?
 };
 
-VARIANT_ENUM_CAST(Voxel::GeometryType)
-VARIANT_ENUM_CAST(Voxel::Side)
+}
+
+VARIANT_ENUM_CAST(Voxel::Voxel::GeometryType)
+VARIANT_ENUM_CAST(Voxel::Voxel::Side)
+
 
 #endif // VOXEL_TYPE_H

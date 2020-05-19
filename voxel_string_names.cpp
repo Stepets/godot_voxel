@@ -1,5 +1,7 @@
 #include "voxel_string_names.h"
 
+namespace Voxel {
+
 VoxelStringNames *VoxelStringNames::g_singleton;
 
 void VoxelStringNames::create_singleton() {
@@ -21,4 +23,6 @@ VoxelStringNames::VoxelStringNames() {
 	get_used_channels_mask = StaticCString::create("get_used_channels_mask");
 
 	u_transition_mask = StaticCString::create("u_transition_mask");
+}
+
 }

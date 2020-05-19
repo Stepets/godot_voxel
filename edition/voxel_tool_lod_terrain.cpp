@@ -2,6 +2,8 @@
 #include "../terrain/voxel_lod_terrain.h"
 #include "../terrain/voxel_map.h"
 
+namespace Voxel {
+
 VoxelToolLodTerrain::VoxelToolLodTerrain(VoxelLodTerrain *terrain, Ref<VoxelMap> map) {
 	ERR_FAIL_COND(terrain == nullptr);
 	_terrain = terrain;
@@ -37,4 +39,6 @@ void VoxelToolLodTerrain::_set_voxel_f(Vector3i pos, float v) {
 void VoxelToolLodTerrain::_post_edit(const Rect3i &box) {
 	ERR_FAIL_COND(_terrain == nullptr);
 	_terrain->post_edit_area(box);
+}
+
 }

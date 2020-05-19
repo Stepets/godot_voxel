@@ -7,6 +7,8 @@
 #include <core/reference.h>
 #include <core/vector.h>
 
+namespace Voxel {
+
 class VoxelTool;
 
 // Dense voxels data storage.
@@ -190,7 +192,9 @@ private:
 	Vector3i _size;
 };
 
-VARIANT_ENUM_CAST(VoxelBuffer::ChannelId)
-VARIANT_ENUM_CAST(VoxelBuffer::Depth)
+}
+
+VARIANT_ENUM_CAST(Voxel::VoxelBuffer::ChannelId)
+VARIANT_ENUM_CAST(Voxel::VoxelBuffer::Depth)
 
 #endif // VOXEL_BUFFER_H

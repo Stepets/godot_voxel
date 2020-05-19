@@ -6,6 +6,8 @@
 
 class FileAccess;
 
+namespace Voxel {
+
 // Loads and saves blocks to the filesystem, under a directory.
 // Each block gets its own file, which may produce a lot of them, but it makes it simple to implement.
 class VoxelStreamBlockFiles : public VoxelStreamFile {
@@ -43,5 +45,7 @@ private:
 	bool _meta_loaded = false;
 	bool _meta_saved = false;
 };
+
+}
 
 #endif // VOXEL_STREAM_BLOCK_FILES_H

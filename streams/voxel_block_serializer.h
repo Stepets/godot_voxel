@@ -4,6 +4,8 @@
 #include <core/io/file_access_memory.h>
 #include <vector>
 
+namespace Voxel {
+
 class VoxelBuffer;
 
 class VoxelBlockSerializer {
@@ -22,5 +24,7 @@ private:
 	std::vector<uint8_t> _compressed_data;
 	FileAccessMemory _file_access_memory;
 };
+
+}
 
 #endif // VOXEL_BLOCK_SERIALIZER_H

@@ -32,6 +32,8 @@
 
 #include <core/error_macros.h>
 
+namespace Voxel {
+
 namespace Transvoxel {
 
 // The RegularCellData structure holds information about the triangulation
@@ -1054,3 +1056,5 @@ inline unsigned short get_transition_vertex_data(unsigned int i, unsigned int j)
 }
 
 } // namespace Transvoxel
+
+}

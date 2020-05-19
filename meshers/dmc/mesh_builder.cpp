@@ -1,5 +1,7 @@
 #include "mesh_builder.h"
 
+namespace Voxel {
+
 namespace dmc {
 
 Array MeshBuilder::commit(bool wireframe) {
@@ -30,9 +32,9 @@ Array MeshBuilder::commit(bool wireframe) {
 		_indices = wireframe_indices;
 	}
 
-	PoolVector3Array positions;
-	PoolVector3Array normals;
-	PoolIntArray indices;
+	PackedVector3Array positions;
+	PackedVector3Array normals;
+	PackedInt32Array indices;
 
 	raw_copy_to(positions, _positions);
 	raw_copy_to(normals, _normals);
@@ -64,3 +66,5 @@ void MeshBuilder::clear() {
 }
 
 } // namespace dmc
+
+}

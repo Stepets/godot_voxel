@@ -2,6 +2,8 @@
 #include "transvoxel_tables.cpp"
 #include <core/os/os.h>
 
+namespace Voxel {
+
 namespace {
 
 static const float TRANSITION_CELL_SCALE = 0.25;
@@ -10,8 +12,7 @@ static const unsigned int MESH_COMPRESSION_FLAGS =
 		Mesh::ARRAY_COMPRESS_TANGENT |
 		//Mesh::ARRAY_COMPRESS_COLOR | // Using color as 4 full floats to transfer extra attributes for now...
 		Mesh::ARRAY_COMPRESS_TEX_UV |
-		Mesh::ARRAY_COMPRESS_TEX_UV2 |
-		Mesh::ARRAY_COMPRESS_WEIGHTS;
+		Mesh::ARRAY_COMPRESS_TEX_UV2;
 
 // Multiply integer math results by this
 static const float FIXED_FACTOR = 1.f / 256.f;
@@ -143,10 +144,10 @@ void VoxelMesherTransvoxel::clear_output() {
 
 void VoxelMesherTransvoxel::fill_surface_arrays(Array &arrays) {
 
-	PoolVector<Vector3> vertices;
-	PoolVector<Vector3> normals;
-	PoolVector<Color> extra;
-	PoolVector<int> indices;
+	Vector<Vector3> vertices;
+	Vector<Vector3> normals;
+	Vector<Color> extra;
+	Vector<int> indices;
 
 	raw_copy_to(vertices, _output_vertices);
 	raw_copy_to(normals, _output_normals);
@@ -223,7 +224,7 @@ Ref<ArrayMesh> VoxelMesherTransvoxel::build_transition_mesh(Ref<VoxelBuffer> vox
 	Array arrays;
 	fill_surface_arrays(arrays);
 	mesh.instance();
-	mesh->add_surface_from_arrays(Mesh::PRIMITIVE_TRIANGLES, arrays, Array(), MESH_COMPRESSION_FLAGS);
+	mesh->add_surface_from_arrays(Mesh::PRIMITIVE_TRIANGLES, arrays, Array(), Dictionary(), MESH_COMPRESSION_FLAGS);
 	return mesh;
 }
 
@@ -958,4 +959,6 @@ VoxelMesher *VoxelMesherTransvoxel::clone() {
 
 void VoxelMesherTransvoxel::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("build_transition_mesh", "voxel_buffer", "direction"), &VoxelMesherTransvoxel::build_transition_mesh);
+}
+
 }

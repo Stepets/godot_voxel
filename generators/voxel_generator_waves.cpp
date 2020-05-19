@@ -2,6 +2,8 @@
 #include "../util/utility.h"
 #include <cmath>
 
+namespace Voxel {
+
 VoxelGeneratorWaves::VoxelGeneratorWaves() {
 	_pattern_size = Vector2(30, 30);
 	set_height_range(30);
@@ -42,4 +44,6 @@ void VoxelGeneratorWaves::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "pattern_size"), "set_pattern_size", "get_pattern_size");
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "pattern_offset"), "set_pattern_offset", "get_pattern_offset");
+}
+
 }
